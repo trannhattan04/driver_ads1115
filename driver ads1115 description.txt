@@ -1,0 +1,47 @@
+1.MÔ TẢ VỀ DRIVER
+	- Driver này viết để raspberri giao tiếp với modun ads1115
+	- Driver này dùng để đọc giá hiệu điện thế đơn vị (mV) giữa các chân  AIN - GND
+	- Cấu hình là mặc định : Single-shot, + - 2.048V, 128 SPS
+	- Gía trị cần đọc là AIN0 - GND, AIN1 - GND, AIN2 - GND, AIN3 - GND.
+	- File driver_ads1115.c là source code của driver
+	- File demo_ads1115.c là file code ứng dụng cho user
+	- File Makefile dùng để tạo ra driver_ads1115.ko
+	
+2.Mô TẢ VỀ MODUN ADS1115
+	- ADS1115 là 1 mô đun ADC 16 bit
+	- Địa chỉ thanh ghi để cấu hình là 0x01
+	- Địa chỉ thanh ghi đọc dữ liệu là 0x00
+	- Driver này cấu hình cho ADS1115 như sau: 
+		Single-shot, + - 2.048V, 128 SPS
+		OS = 1 (start), MUX = 100 (AIN0-GND), PGA = 010 (±2.048V)
+		DR = 100 (128SPS), Comparator = default
+		Data can cau hinh cho thanh ghi la: 1100 0100 1000 0011 = 0xC483
+	- Tương tự với cấu hình (AIN1-GND): 0xD483, (AIN2-GND): 0xE483, (AIN3-GND):0xF483
+	
+
+2.CÁC BƯỚC CÀI DRIVER
+	B1: kết nối phần cứng
+	B2: chỉnh sửa device tree trong file * .dtb nằm trong thư muc /boot
+		cd /boot
+	Chuyen dtb thành dts
+		dtc  - I  dtb  -O  -dts  -o  file.dts  file.dtb   
+	Cấu trúc device tree cần thêm
+		ads1115@48  {
+			compatible = "ti,ads1115";
+			reg = <0x48>;
+			};
+	Chuyen dts thành dtb 
+		dtc  - I  dts  -O  -dtb  -o  file.dtb  file.dts  
+	B3: make
+	B4: sudo insmod driver_ads1115.ko
+	
+	
+3.CÁCH DÙNG DRIVER CƠ BẢN (nằm trong file demo_ads1115.c)
+
+
+4.THÀNH VIÊN NHÓM
+	1.Trần Nhật Tân		22146397
+	2.Chí Quang Vinh	22146448
+	3.Hồ Thảo Vy		22146453
+	4.Hoàn Đình Tuấn	22146441
+	5.Nguyễn Nhựt Tú	22146446
